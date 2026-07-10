@@ -7,6 +7,7 @@
 #include <cmath>
 #include <thread>
 #include <math.h>
+#include <shlobj.h>
 #pragma comment(lib, "winmm.lib")
 #pragma comment(lib, "gdi32.lib")
 #define M_PI 3.14159265358979323846

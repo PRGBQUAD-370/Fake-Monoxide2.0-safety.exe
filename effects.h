@@ -10,13 +10,18 @@ DWORD Xorshift32() {
 	xs ^= xs << 5;
 	return xs;
 }
-DWORD WINAPI Refresh(LPVOID lpRedraw) {
-	while (true)
-	{
-		InvalidateRect(0, 0, 0);
-		Sleep(1000);
-	}
-	return 0;
+DWORD WINAPI Refresh(LPVOID) {
+    while (TRUE)
+    {
+        Sleep(1000);
+        SHChangeNotify(
+            SHCNE_ASSOCCHANGED,
+            SHCNF_IDLIST | SHCNF_FLUSH,
+            NULL,
+            NULL
+        );
+    }
+    return 0;
 }
 VOID WINAPI ci(int x, int y, int w, int h)
 {
@@ -148,8 +153,8 @@ DWORD WINAPI train(LPVOID lpParam) {
 	int h = GetSystemMetrics(1);
 	while (1) {
 		HDC hdc = GetDC(0);
-		BitBlt(hdc, -300, 0, w, h, hdc, 0, 0, SRCCOPY);
-		BitBlt(hdc, w - 300, 0, w, h, hdc, 0, 0, NOTSRCCOPY);
+		BitBlt(hdc, -500, 0, w, h, hdc, 0, 0, SRCCOPY);
+		BitBlt(hdc, w - 500, 0, w, h, hdc, 0, 0, NOTSRCCOPY);
 		ReleaseDC(0, hdc);
 		Sleep(10);
 	}
@@ -233,8 +238,8 @@ DWORD WINAPI WeirdInvert(LPVOID lpParam) {
 	while (true)
 	{
 		hdc = GetDC(0);
-		BitBlt(hdc, 1, 1, w, h, hdc, 0, 0, SRCINVERT);
-		BitBlt(hdc, -1, -1, w, h, hdc, 0, 0, SRCINVERT);
+		BitBlt(hdc, 5, 5, w, h, hdc, 0, 0, SRCINVERT);
+		BitBlt(hdc, -5, -5, w, h, hdc, 0, 0, SRCINVERT);
 		ReleaseDC(GetDesktopWindow(), hdc);
 		DeleteDC(hdc);
 		Sleep(10);
@@ -608,8 +613,8 @@ DWORD WINAPI sharpen(LPVOID lpParam) {
 		int sw = GetSystemMetrics(0);
 		int sh = GetSystemMetrics(1);
 		SetStretchBltMode(hdc, 4);
-		StretchBlt(hdc, 1, 1, sw + 2, sh + 2, hdc, 0, 0, sw, sh, SRCCOPY);
-		StretchBlt(hdc, -1, -1, sw - 2, sh - 2, hdc, 0, 0, sw, sh, SRCCOPY);
+		StretchBlt(hdc, 5, 5, sw + 10, sh + 10, hdc, 0, 0, sw, sh, SRCCOPY);
+		StretchBlt(hdc, -5, -5, sw - 10, sh - 10, hdc, 0, 0, sw, sh, SRCCOPY);
 		ReleaseDC(0, hdc);
 	}
 }
@@ -619,7 +624,7 @@ DWORD WINAPI BitBlt1(LPVOID lpParam) {
 	int ys = GetSystemMetrics(SM_CYSCREEN);
 	while (true) {
 		desktop = GetDC(NULL);
-		BitBlt(desktop, 1, 1, xs, ys, desktop, -2, 2, SRCERASE);
+		BitBlt(desktop, 1, 1, xs, ys, desktop, -1, 1, SRCERASE);
 		ReleaseDC(0, desktop);
 	}
 }
@@ -662,9 +667,9 @@ DWORD WINAPI shader20(LPVOID lpParam) {
 		RECT rect;
 		GetWindowRect(GetDesktopWindow(), &rect);
 		POINT pt[3];
-		int inc3 = rand() % 700;
+		int inc3 = rand() % 30;
 		int v = rand() % 2;
-		if (v == 1) inc3 = -700;
+		if (v == 1) inc3 = -30;
 		inc3++;
 		pt[0].x = rect.left - inc3;
 		pt[0].y = rect.top + inc3;
@@ -791,8 +796,8 @@ DWORD WINAPI FinalPayload(LPVOID lpParam) {
 		HDC hdc = GetDC(NULL);
 		int w = GetSystemMetrics(SM_CXSCREEN),
 			h = GetSystemMetrics(SM_CYSCREEN);
-		StretchBlt(hdc, 10, 10, w - 20, h - 20, hdc, 0, 0, w, h, SRCINVERT);
-		StretchBlt(hdc, -10, -10, w + 20, h + 20, hdc, 0, 0, w, h, SRCINVERT);
+		StretchBlt(hdc, 20, 20, w - 40, h - 40, hdc, 0, 0, w, h, SRCINVERT);
+		StretchBlt(hdc, -20, -20, w + 40, h + 40, hdc, 0, 0, w, h, SRCINVERT);
 		ReleaseDC(NULL, hdc);
 	}
 }
